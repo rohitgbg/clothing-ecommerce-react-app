@@ -5,7 +5,7 @@ import HomePage from "./pages/HomePage/HomePage";
 import ShopPage from "./pages/ShopPage/ShopPage";
 import Header from "./components/Header/Header";
 import SignInAndSignUp from "./pages/SignInAndSignUp/SignInAndSignUp";
-import { auth, analytics } from "./components/firbase/firebase";
+import { auth, createUserProfileDocument } from "./components/firbase/firebase";
 
 class App extends React.Component {
   constructor() {
@@ -18,12 +18,23 @@ class App extends React.Component {
   unSubscribeFromAuth = null;
 
   componentDidMount() {
-    this.unSubscribeFromAuth = auth.onAuthStateChanged(user => {
-      this.setState({ currentUser: user });
+    this.unSubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+      if (userAuth) {
+        const userRef = createUserProfileDocument(userAuth);
 
-      analytics.logEvent("status_changes", { login: "login or logout" });
-
-      console.log(user);
+        (await userRef).onSnapshot(snapShot => {
+          this.setState({
+            currentUser: {
+              id: snapShot.id,
+              ...snapShot.data()
+            }
+          });
+        });
+      } else {
+        this.setState({
+          currentUser: userAuth
+        });
+      }
     });
   }
 
@@ -32,6 +43,7 @@ class App extends React.Component {
   }
 
   render() {
+    console.log(this.state);
     return (
       <div className="App">
         <Header currentUser={this.state.currentUser} />
