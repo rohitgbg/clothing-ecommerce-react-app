@@ -9,16 +9,16 @@ import {
 //   payload: collectionMap
 // });
 
-const fetchCollectionStart = () => ({
+export const fetchCollectionStart = () => ({
   type: ShopActionTypes.FETCH_COLLECTION_START
 });
 
-const fetchCollectionSuccess = collectionMap => ({
+export const fetchCollectionSuccess = collectionMap => ({
   type: ShopActionTypes.FETCH_COLLECTION_SUCCESS,
   payload: collectionMap
 });
 
-const fetchCollectionFailure = errorMessage => ({
+export const fetchCollectionFailure = errorMessage => ({
   type: ShopActionTypes.FETCH_COLLECTION_FAILURE,
   payload: errorMessage
 });

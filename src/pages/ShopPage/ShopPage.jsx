@@ -4,7 +4,7 @@ import React, { Component } from "react";
 import { Route } from "react-router-dom";
 // import Collection from "../Collection/Collection";
 
-import { fetchCollectionStartAsync } from "../../redux/shop/shop.actions";
+import { fetchCollectionStart } from "../../redux/shop/shop.actions";
 import { connect } from "react-redux";
 // import WithSpinner from "../../components/WithSpinner/WithSpinner";
 // import { createStructuredSelector } from "reselect";
@@ -20,8 +20,8 @@ import CollectionContainer from "../Collection/CollectionContainer";
 
 class ShopPage extends Component {
   componentDidMount() {
-    const { fetchCollectionStartAsync } = this.props;
-    fetchCollectionStartAsync();
+    const { fetchCollectionStart } = this.props;
+    fetchCollectionStart();
     // const { updateCollections } = this.props;
     // const collectionRef = firestore.collection("collections");
     // fetch(
@@ -87,7 +87,7 @@ class ShopPage extends Component {
 // });
 
 const mapsToDispatch = dispatch => ({
-  fetchCollectionStartAsync: () => dispatch(fetchCollectionStartAsync())
+  fetchCollectionStart: () => dispatch(fetchCollectionStart())
 });
 
 export default connect(null, mapsToDispatch)(ShopPage);
