@@ -5,38 +5,41 @@ import HomePage from "./pages/HomePage/HomePage";
 import ShopPage from "./pages/ShopPage/ShopPage";
 import Header from "./components/Header/Header";
 import SignInAndSignUp from "./pages/SignInAndSignUp/SignInAndSignUp";
-import { auth, createUserProfileDocument } from "./components/firbase/firebase";
+// import { auth, createUserProfileDocument } from "./components/firbase/firebase";
 import { connect } from "react-redux";
-import { setCurrentUser } from "./redux/user/user.actions";
+// import { setCurrentUser } from "./redux/user/user.actions";
 import { selectCurrentUser } from "./redux/user/user.selectors";
 import { createStructuredSelector } from "reselect";
 import CheckOut from "./pages/CheckOut/CheckOut";
+import { checkUserSession } from "./redux/user/user.actions";
 // import { selectShopCollectionsOverview } from "./redux/shop/shop.selectors";
 
 class App extends React.Component {
   unSubscribeFromAuth = null;
 
   componentDidMount() {
-    const { setCurrentUser } = this.props;
-    this.unSubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
-      if (userAuth) {
-        const userRef = createUserProfileDocument(userAuth);
+    const { checkUserSession } = this.props;
 
-        (await userRef).onSnapshot(snapShot => {
-          setCurrentUser({
-            id: snapShot.id,
-            ...snapShot.data()
-          });
-        });
-      } else {
-        setCurrentUser(null);
-      }
+    checkUserSession();
 
-      // addCollectionAndDocuments(
-      //   "collections",
-      //   collectionArray.map(({ title, items }) => ({ title, items }))
-      // );
-    });
+    // const { setCurrentUser } = this.props;
+    // this.unSubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+    //   if (userAuth) {
+    //     const userRef = await createUserProfileDocument(userAuth);
+    //     userRef.onSnapshot(snapShot => {
+    //       setCurrentUser({
+    //         id: snapShot.id,
+    //         ...snapShot.data()
+    //       });
+    //     });
+    //   } else {
+    //     setCurrentUser(null);
+    //   }
+    //   // addCollectionAndDocuments(
+    //   //   "collections",
+    //   //   collectionArray.map(({ title, items }) => ({ title, items }))
+    //   // );
+    // });
   }
 
   componentWillUnmount() {
@@ -66,12 +69,13 @@ class App extends React.Component {
 
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser
+
   // collectionArray: selectShopCollectionsOverview
 });
 
-const mapDispatchToProps = dispatch => ({
-  setCurrentUser: user => dispatch(setCurrentUser(user))
+const mapDispatchToprops = dispatch => ({
+  checkUserSession: () => dispatch(checkUserSession())
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToprops)(App);
 // connect takes two args --> mapStateToProps and mapDispatchToProps
